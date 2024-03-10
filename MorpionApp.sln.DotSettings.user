@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=be51625e_002D2dae_002D4484_002D9b69_002Db21332cb0f71/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from MorpionTest.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Or&gt;
+    &lt;ProjectFile&gt;327B1205-8A8D-4814-8991-D85AAB68F07D/f:MorpionTest.cs&lt;/ProjectFile&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;xUnit::327B1205-8A8D-4814-8991-D85AAB68F07D::net6.0::MorpionAppTest.PuissanceQuatreTest.Victoire_Equality_ReturnsFalse&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::327B1205-8A8D-4814-8991-D85AAB68F07D::net6.0::MorpionAppTest.PuissanceQuatreTest&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::327B1205-8A8D-4814-8991-D85AAB68F07D::net6.0::MorpionAppTest.PuissanceQuatre_verifVictoire&lt;/TestId&gt;
+      &lt;TestId&gt;xUnit::327B1205-8A8D-4814-8991-D85AAB68F07D::net6.0::MorpionAppTest.PuissanceQuatre_verifEgalite&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+  &lt;/Or&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
