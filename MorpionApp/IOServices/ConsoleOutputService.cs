@@ -2,8 +2,8 @@ namespace MorpionApp;
 
 public class ConsoleOutputService: IOutputService
 {
-    public void WriteOutput(string output)
+    public void Write(string output)
     {
-        throw new NotImplementedException();
+        Console.WriteLine(output);
     }
 }
