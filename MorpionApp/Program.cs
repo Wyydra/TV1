@@ -1,4 +1,6 @@
-﻿namespace MorpionApp
+﻿using MorpionApp.IOService;
+
+namespace MorpionApp
 {
     public class Program
     {
@@ -10,14 +12,15 @@
                 Game game;
                 Console.WriteLine("Choose a game: 1 for TicTacToe, 2 for ConnectFour");
                 var gameChoice = Console.ReadKey().Key;
+                var outputService = new ConsoleOutput();
                 switch (gameChoice)
                 {
                     case ConsoleKey.D1:
-                        game = new TicTacToeGame(new Player[] { new HumanPlayer('X'), new HumanPlayer('O') });
+                        game = new TicTacToeGame(outputService,new Player[] { new HumanPlayer('X'), new HumanPlayer('O') });
                         game.Play();
                         break;
                     case ConsoleKey.D2:
-                        game = new ConnectFour(new Player[] { new HumanPlayer('X'), new HumanPlayer('O') });
+                        game = new ConnectFour(outputService,new Player[] { new HumanPlayer('X'), new HumanPlayer('O') });
                         game.Play();
                         break;
                     default:

@@ -1,8 +1,10 @@
+using MorpionApp.IOService;
+
 namespace MorpionApp;
 
 public class TicTacToeGame: Game
 {
-    public TicTacToeGame(Player[] players) : base(3, 3, players)
+    public TicTacToeGame(IOutputService outputService,Player[] players) : base(outputService,3, 3, players)
     {
     }
 
@@ -16,7 +18,7 @@ public class TicTacToeGame: Game
         SetCell(position, CurrentPlayer.Symbol);
         Draw();
         
-        if (CheckWin(position))
+        if (CheckWin())
         {
             Console.WriteLine($"Player {CurrentPlayer.Symbol} wins!");
             IsFinished = true;

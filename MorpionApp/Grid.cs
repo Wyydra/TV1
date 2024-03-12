@@ -1,16 +1,20 @@
+using MorpionApp.IOService;
+
 namespace MorpionApp;
 
 public class Grid
 {
-    public const int CellWidth = 3;
-    public const int CellHeight = 3;
+    public const int CellWidth = 4;
+    public const int CellHeight = 4;
     public const char EmptyCell = '\0';
     
     public readonly int Width;
     public readonly int Height;
-    private char[,] _grid;
     
-    public Grid(int width, int height)
+    private char[,] _grid;
+    private IOutputService _outputService;
+    
+    public Grid(IOutputService outputService, int width, int height)
     {
         Width = width;
         Height = height;
@@ -22,6 +26,7 @@ public class Grid
                 _grid[j, i] = EmptyCell;
             }
         }
+        this._outputService = outputService;
     }
     public bool IsValidPosition(Position position)
     {
@@ -53,92 +58,95 @@ public class Grid
         }
         return true;
     }
-    public bool CheckWin(char symbol, int length)
+    public bool CheckWin(char symbol)
     {
-        var mask = new int[length];
-        for (var i = 0; i < length; i++)
-        {
-            mask[i] = 1;
-        }
-
+        // generate mask length based on the grid size
+        var length = Math.Min(Width, Height);
+        var horizontalMask = GenerateHorizontalMask(length);
+        var verticalMask = GenerateVerticalMask(length);
+        var mainDiagonalMask = GenerateMainDiagonalMask(length, length);
+        var counterDiagonalMask = GenerateCounterDiagonalMask(length, length);
         for (var i = 0; i < Height; i++)
         {
-            if (ConvolveRow(i, symbol, mask) == length)
+            for (var j = 0; j < Width; j++)
             {
-                return true;
+                var position = new Position(i, j);
+                if (CheckMask(horizontalMask, symbol, length, position) 
+                    || CheckMask(verticalMask, symbol, length, position) 
+                    || CheckMask(mainDiagonalMask, symbol, length, position) 
+                    || CheckMask(counterDiagonalMask, symbol, length, position))
+                {
+                    return true;
+                }
             }
         }
-
-        for (var i = 0; i < Width; i++)
-        {
-            if (ConvolveColumn(i, symbol, mask) == length)
-            {
-                return true;
-            }
-        }
-
-        if (ConvolveMainDiagonal(symbol, mask) == length)
-        {
-            return true;
-        }
-
-        return ConvolveAntiDiagonal(symbol, mask) == length;
+        return false;
     }
-    
-    private int ConvolveRow(int rowIndex, char symbol, int[] mask)
+    public bool CheckMask(int[,] mask, char symbol, int length, Position position)
     {
-        var sum = 0;
-        for (var i = 0; i < Width; i++)
+        var (x,y) = (position.Column, position.Row);
+        int maskRows = mask.GetLength(0);
+        int maskCols = mask.GetLength(1);
+        if (x + maskCols > Width || y + maskRows > Height)
         {
-            if (_grid[i, rowIndex] == symbol)
+            return false;
+        }
+        for (int i = 0; i < maskRows; i++)
+        {
+            for (int j = 0; j < maskCols; j++)
             {
-                sum += mask[i];
+                if (mask[i, j] == 1 && _grid[x + j, y + i] != symbol)
+                {
+                    return false;
+                }
             }
         }
-        return sum;
+        return true;
     }
-    private int ConvolveColumn(int columnIndex, char symbol, int[] mask)
+    public static int[,] GenerateHorizontalMask(int width)
     {
-        var sum = 0;
-        for (var i = 0; i < Height; i++)
+        int[,] mask = new int[1, width];
+        for (int i = 0; i < width; i++)
         {
-            if (_grid[columnIndex, i] == symbol)
-            {
-                sum += mask[i];
-            }
+            mask[0, i] = 1;
         }
-        return sum;
-    }
-    private int ConvolveMainDiagonal(char symbol, IReadOnlyList<int> mask)
-    {
-        var sum = 0;
-        var diagonalLength = Math.Min(Width, Height);
-        for (var i = 0; i < diagonalLength; i++)
-        {
-            if (_grid[i, i] == symbol)
-            {
-                sum += mask[i];
-            }
-        }
-        return sum;
+        return mask;
     }
 
-    private int ConvolveAntiDiagonal(char symbol, IReadOnlyList<int> mask)
+    public static int[,] GenerateVerticalMask(int height)
     {
-        var sum = 0;
-        var diagonalLength = Math.Min(Width, Height);
-        for (var i = 0; i < diagonalLength; i++)
+        int[,] mask = new int[height, 1];
+        for (int i = 0; i < height; i++)
         {
-            if (_grid[Width - 1 - i, i] == symbol)
-            {
-                sum += mask[i];
-            }
+            mask[i, 0] = 1;
         }
-        return sum;
+        return mask;
+    }
+
+    public static int[,] GenerateMainDiagonalMask(int width, int height)
+    {
+        int minSize = Math.Min(width, height);
+        int[,] mask = new int[minSize, minSize];
+        for (int i = 0; i < minSize; i++)
+        {
+            mask[i, i] = 1;
+        }
+        return mask;
+    }
+
+    public static int[,] GenerateCounterDiagonalMask(int width, int height)
+    {
+        int minSize = Math.Min(width, height);
+        int[,] mask = new int[minSize, minSize];
+        for (int i = 0; i < minSize; i++)
+        {
+            mask[i, minSize - i - 1] = 1;
+        }
+        return mask;
     }
     public void Draw()
     {
-        Console.Clear();
+        _outputService.Clear();
         for (var i = 0; i < Height; i++)
         {
             DrawRow(i);
@@ -152,18 +160,18 @@ public class Grid
             var symbol = _grid[j, rowIndex] != EmptyCell ? _grid[j, rowIndex].ToString() : " ";
             var padding = (CellWidth - symbol.Length) / 2;
             var paddedSymbol = new string(' ', padding) + symbol + new string(' ', CellWidth - padding - symbol.Length);
-            Console.Write(paddedSymbol);
-            if (j < Width - 1) Console.Write("|");
+            _outputService.Write(paddedSymbol);
+            if (j < Width - 1) _outputService.Write("|");
         }
-        Console.WriteLine();
+        _outputService.WriteLine("");
     }
     private void DrawSeparator()
     {
         for (var j = 0; j < Width; j++)
         {
-            Console.Write(new string('-', CellHeight));
-            if (j < Width - 1) Console.Write("+");
+            _outputService.Write(new string('-', CellHeight));
+            if (j < Width - 1) _outputService.Write("+");
         }
-        Console.WriteLine();
+        _outputService.WriteLine("");
     }
 }
