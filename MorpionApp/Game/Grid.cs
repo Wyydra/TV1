@@ -1,16 +1,23 @@
 using MorpionApp.IOService;
+using Newtonsoft.Json;
 
 namespace MorpionApp;
 
 public class Grid
 {
+    [JsonProperty]
     public const int CellWidth = 4;
+    [JsonProperty]
     public const int CellHeight = 4;
+    [JsonProperty]
     public const char EmptyCell = '\0';
     
+    [JsonProperty]
     public readonly int Width;
+    [JsonProperty]
     public readonly int Height;
     
+    [JsonProperty]
     private char[,] _grid;
     private IOutputService _outputService;
     
