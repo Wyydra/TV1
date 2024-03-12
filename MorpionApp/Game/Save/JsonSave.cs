@@ -9,7 +9,7 @@ public class JsonSave: ISaveStrategy
         var settings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            Formatting = Formatting.Indented,
+            
             //Converters = new List<JsonConverter> { new GameConverter(), new PlayerConverter() }
         };
         var json = JsonConvert.SerializeObject(game, settings);

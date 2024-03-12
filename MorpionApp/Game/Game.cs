@@ -29,6 +29,37 @@ public abstract class Game
         set => _saveStrategy = value;
     }
 
+    public static void FromSave(Type actual, GameSave save)
+    {
+        // call actual type constructor not game constructor
+        var game = (Game)Activator.CreateInstance(actual, save.Width, save.Height, save.Players, save.CurrentPlayer, save.Grid);
+        
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null) return false;
+        if (obj.GetType() != this.GetType()) return false;
+        var game = (Game) obj;
+        return Width == game.Width
+               && Height == game.Height
+               && _grid.Equals(game._grid)
+               && _players.SequenceEqual(game._players)
+               && (CurrentPlayer == null && game.CurrentPlayer == null || CurrentPlayer.Equals(game.CurrentPlayer));
+    }
+
+    protected Game(int width, int height, Player[] players,Player currentPlayer, Grid grid)
+    {
+        this.Width = width;
+        this.Height = height;
+        _grid = grid;
+        _players = players;
+        _switchPlayerStrategy = new SImpleSwitchPlayer();
+        _outputService = new ConsoleOutput();
+        _saveStrategy = new JsonSave();
+    }
+    
+    
     protected Game(IOutputService outputService, int width, int height, Player[] players)
     {
         this.Width = width;
