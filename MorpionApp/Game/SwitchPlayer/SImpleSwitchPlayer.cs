@@ -1,6 +1,6 @@
 namespace MorpionApp;
 
-public class SimpleSwitchPlayerStrategy : ISwitchPlayerStrategy
+public class SImpleSwitchPlayer : ISwitchPlayerStrategy
 {
     public Player SwitchPlayer(Player? currentPlayer, Player[] players)
     {

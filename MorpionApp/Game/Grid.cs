@@ -1,16 +1,23 @@
 using MorpionApp.IOService;
+using Newtonsoft.Json;
 
 namespace MorpionApp;
 
 public class Grid
 {
+    [JsonProperty]
     public const int CellWidth = 4;
+    [JsonProperty]
     public const int CellHeight = 4;
+    [JsonProperty]
     public const char EmptyCell = '\0';
     
+    [JsonProperty]
     public readonly int Width;
+    [JsonProperty]
     public readonly int Height;
     
+    [JsonProperty]
     private char[,] _grid;
     private IOutputService _outputService;
     
@@ -26,7 +33,7 @@ public class Grid
                 _grid[j, i] = EmptyCell;
             }
         }
-        this._outputService = outputService;
+        this._outputService = outputService ?? new ConsoleOutput();
     }
     public bool IsValidPosition(Position position)
     {
@@ -82,18 +89,19 @@ public class Grid
         }
         return false;
     }
-    public bool CheckMask(int[,] mask, char symbol, int length, Position position)
+
+    private bool CheckMask(int[,] mask, char symbol, int length, Position position)
     {
         var (x,y) = (position.Column, position.Row);
-        int maskRows = mask.GetLength(0);
-        int maskCols = mask.GetLength(1);
+        var maskRows = mask.GetLength(0);
+        var maskCols = mask.GetLength(1);
         if (x + maskCols > Width || y + maskRows > Height)
         {
             return false;
         }
-        for (int i = 0; i < maskRows; i++)
+        for (var i = 0; i < maskRows; i++)
         {
-            for (int j = 0; j < maskCols; j++)
+            for (var j = 0; j < maskCols; j++)
             {
                 if (mask[i, j] == 1 && _grid[x + j, y + i] != symbol)
                 {
@@ -103,42 +111,43 @@ public class Grid
         }
         return true;
     }
-    public static int[,] GenerateHorizontalMask(int width)
+
+    private static int[,] GenerateHorizontalMask(int width)
     {
-        int[,] mask = new int[1, width];
-        for (int i = 0; i < width; i++)
+        var mask = new int[1, width];
+        for (var i = 0; i < width; i++)
         {
             mask[0, i] = 1;
         }
         return mask;
     }
 
-    public static int[,] GenerateVerticalMask(int height)
+    private static int[,] GenerateVerticalMask(int height)
     {
-        int[,] mask = new int[height, 1];
-        for (int i = 0; i < height; i++)
+        var mask = new int[height, 1];
+        for (var i = 0; i < height; i++)
         {
             mask[i, 0] = 1;
         }
         return mask;
     }
 
-    public static int[,] GenerateMainDiagonalMask(int width, int height)
+    private static int[,] GenerateMainDiagonalMask(int width, int height)
     {
-        int minSize = Math.Min(width, height);
-        int[,] mask = new int[minSize, minSize];
-        for (int i = 0; i < minSize; i++)
+        var minSize = Math.Min(width, height);
+        var mask = new int[minSize, minSize];
+        for (var i = 0; i < minSize; i++)
         {
             mask[i, i] = 1;
         }
         return mask;
     }
 
-    public static int[,] GenerateCounterDiagonalMask(int width, int height)
+    private static int[,] GenerateCounterDiagonalMask(int width, int height)
     {
-        int minSize = Math.Min(width, height);
-        int[,] mask = new int[minSize, minSize];
-        for (int i = 0; i < minSize; i++)
+        var minSize = Math.Min(width, height);
+        var mask = new int[minSize, minSize];
+        for (var i = 0; i < minSize; i++)
         {
             mask[i, minSize - i - 1] = 1;
         }

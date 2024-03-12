@@ -1,20 +1,32 @@
 using MorpionApp.IOService;
+using MorpionApp.Save;
+using Newtonsoft.Json;
 
 namespace MorpionApp;
 
 public abstract class Game
 {
+    [JsonProperty]
     protected Player? CurrentPlayer;
+    [JsonProperty]
     public readonly int Width;
+    [JsonProperty]
     public readonly int Height;
 
+    [JsonProperty]
     private Grid _grid;
+    [JsonProperty]
     private Player[] _players;
-    private ISwitchPlayerStrategy _switchPlayerStrategy;
     private IOutputService _outputService;
+    private ISwitchPlayerStrategy _switchPlayerStrategy;
     public ISwitchPlayerStrategy SwitchPlayerStrategy
     {
         set => _switchPlayerStrategy = value;
+    }
+    private ISaveStrategy _saveStrategy;
+    public ISaveStrategy SaveStrategy
+    {
+        set => _saveStrategy = value;
     }
 
     protected Game(IOutputService outputService, int width, int height, Player[] players)
@@ -23,8 +35,9 @@ public abstract class Game
         this.Height = height;
         _grid = new Grid(outputService,width, height);
         _players = players;
-        _switchPlayerStrategy = new SimpleSwitchPlayerStrategy();
+        _switchPlayerStrategy = new SImpleSwitchPlayer();
         this._outputService = _outputService;
+        _saveStrategy = new JsonSave();
     }
 
     protected bool IsFinished { get; set; }
@@ -36,7 +49,12 @@ public abstract class Game
             Draw();
             SwitchPlayer();
             DoTurn();
+            Save();
         }
+    }
+    public void Save()
+    {
+        _saveStrategy.Save("save.json", this);
     }
     public void Draw()
     {

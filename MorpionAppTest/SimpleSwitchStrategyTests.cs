@@ -8,7 +8,7 @@ public class SimpleSwitchPlayerStrategyTests
     public void SwitchPlayer_CurrentPlayerIsNull_ReturnsFirstPlayer()
     {
         Player[] players = { new MockPlayer('X'), new MockPlayer('O') };
-        var strategy = new SimpleSwitchPlayerStrategy();
+        var strategy = new SImpleSwitchPlayer();
 
         var result = strategy.SwitchPlayer(null, players);
 
@@ -19,7 +19,7 @@ public class SimpleSwitchPlayerStrategyTests
     public void SwitchPlayer_CurrentPlayerIsFirstPlayer_ReturnsSecondPlayer()
     {
         Player[] players = { new MockPlayer('X'), new MockPlayer('O') };
-        var strategy = new SimpleSwitchPlayerStrategy();
+        var strategy = new SImpleSwitchPlayer();
 
         var result = strategy.SwitchPlayer(players[0], players);
 
@@ -30,7 +30,7 @@ public class SimpleSwitchPlayerStrategyTests
     public void SwitchPlayer_CurrentPlayerIsLastPlayer_ReturnsFirstPlayer()
     {
         Player[] players = { new MockPlayer('X'), new MockPlayer('O') };
-        var strategy = new SimpleSwitchPlayerStrategy();
+        var strategy = new SImpleSwitchPlayer();
 
         var result = strategy.SwitchPlayer(players[1], players);
 
