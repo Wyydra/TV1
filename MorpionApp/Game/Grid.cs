@@ -35,6 +35,23 @@ public class Grid
         }
         this._outputService = outputService ?? new ConsoleOutput();
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null) return false;
+        if (obj.GetType() != this.GetType()) return false;
+        var grid = (Grid) obj;
+        if (Width != grid.Width || Height != grid.Height) return false;
+        for (var i = 0; i < Height; i++)
+        {
+            for (var j = 0; j < Width; j++)
+            {
+                if (_grid[j, i] != grid._grid[j, i]) return false;
+            }
+        }
+        return true;
+    }
+
     public bool IsValidPosition(Position position)
     {
         return position.Row >= 0 
