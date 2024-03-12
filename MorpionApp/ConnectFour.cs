@@ -1,8 +1,10 @@
+using MorpionApp.IOService;
+
 namespace MorpionApp;
 
 public class ConnectFour: Game
 {
-    public ConnectFour( Player[] players) : base(7, 4, players)
+    public ConnectFour(IOutputService outputService,Player[] players) : base(outputService,7, 4, players)
     {
     }
 
@@ -23,7 +25,7 @@ public class ConnectFour: Game
         SetCell(position, CurrentPlayer.Symbol);
         Draw();
         
-        if (CheckWin(position))
+        if (CheckWin())
         {
             Console.WriteLine($"Player {CurrentPlayer.Symbol} wins!");
             IsFinished = true;
