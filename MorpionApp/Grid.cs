@@ -39,10 +39,6 @@ public class Grid
     {
         return _grid[position.Column, position.Row];
     }
-    public bool CheckWin(char symbol, Position position)
-    {
-        return CheckRow(symbol,position) || CheckColumn(symbol,position) || CheckDiagonal(symbol,position);
-    }
     public bool CheckDraw()
     {
         for (var i = 0; i < Height; i++)
@@ -57,52 +53,88 @@ public class Grid
         }
         return true;
     }
-    public bool CheckRow(char symbol, Position position)
+    public bool CheckWin(char symbol, int length)
     {
-        for (var i = 0; i < Width; i++)
+        var mask = new int[length];
+        for (var i = 0; i < length; i++)
         {
-            if (_grid[i, position.Row] != symbol)
-            {
-                return false;
-            }
+            mask[i] = 1;
         }
-        return true;
-    }
-    public bool CheckColumn(char symbol, Position position)
-    {
+
         for (var i = 0; i < Height; i++)
         {
-            if (_grid[position.Column, i] != symbol)
+            if (ConvolveRow(i, symbol, mask) == length)
             {
-                return false;
+                return true;
             }
         }
-        return true;
-    }
-    public bool CheckDiagonal(char symbol, Position position)
-    {
-        if (position.Row == position.Column)
-        {
-            for (var i = 0; i < Width; i++)
-            {
-                if (_grid[i, i] != symbol)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-    
-        if (position.Row + position.Column != Width - 1) return false;
-            
+
         for (var i = 0; i < Width; i++)
         {
-            if (_grid[i, Width - 1 - i] != symbol)
+            if (ConvolveColumn(i, symbol, mask) == length)
             {
-                return false;
+                return true;
             }
         }
-        return true;
+
+        if (ConvolveMainDiagonal(symbol, mask) == length)
+        {
+            return true;
+        }
+
+        return ConvolveAntiDiagonal(symbol, mask) == length;
+    }
+    
+    private int ConvolveRow(int rowIndex, char symbol, int[] mask)
+    {
+        var sum = 0;
+        for (var i = 0; i < Width; i++)
+        {
+            if (_grid[i, rowIndex] == symbol)
+            {
+                sum += mask[i];
+            }
+        }
+        return sum;
+    }
+    private int ConvolveColumn(int columnIndex, char symbol, int[] mask)
+    {
+        var sum = 0;
+        for (var i = 0; i < Height; i++)
+        {
+            if (_grid[columnIndex, i] == symbol)
+            {
+                sum += mask[i];
+            }
+        }
+        return sum;
+    }
+    private int ConvolveMainDiagonal(char symbol, IReadOnlyList<int> mask)
+    {
+        var sum = 0;
+        var diagonalLength = Math.Min(Width, Height);
+        for (var i = 0; i < diagonalLength; i++)
+        {
+            if (_grid[i, i] == symbol)
+            {
+                sum += mask[i];
+            }
+        }
+        return sum;
+    }
+
+    private int ConvolveAntiDiagonal(char symbol, IReadOnlyList<int> mask)
+    {
+        var sum = 0;
+        var diagonalLength = Math.Min(Width, Height);
+        for (var i = 0; i < diagonalLength; i++)
+        {
+            if (_grid[Width - 1 - i, i] == symbol)
+            {
+                sum += mask[i];
+            }
+        }
+        return sum;
     }
     public void Draw()
     {

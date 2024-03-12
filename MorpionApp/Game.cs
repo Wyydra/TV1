@@ -59,25 +59,14 @@ public abstract class Game
     }
     protected bool CheckWin(Position position)
     {
-        return CheckRow(position) || CheckColumn(position) || CheckDiagonal(position);
+        return _grid.CheckWin(CurrentPlayer!.Symbol,_grid.Width);
     }
     protected bool CheckDraw()
     {
         return _grid.CheckDraw();
     }
-    private bool CheckRow(Position position)
-    {
-        return _grid.CheckRow(CurrentPlayer!.Symbol,position);
-    }
-    private bool CheckColumn(Position position)
-    {
-        return _grid.CheckColumn(CurrentPlayer!.Symbol,position); 
-    }
-    private bool CheckDiagonal(Position position)
-    {
-        return _grid.CheckDiagonal(CurrentPlayer!.Symbol,position); 
-    }
-    protected void SwitchPlayer()
+
+    private void SwitchPlayer()
     {
         CurrentPlayer = _switchPlayerStrategy.SwitchPlayer(CurrentPlayer, _players); 
     }
