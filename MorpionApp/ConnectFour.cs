@@ -15,7 +15,7 @@ public class ConnectFour: Game
             // check last empty cell in column
             for (var i = Height - 1; i >= 0; i--)
             {
-                if (GetCell(new Position(i,position.Column)) != EmptyCell) continue;
+                if (GetCell(new Position(i,position.Column)) != Grid.EmptyCell) continue;
                 position.Row = i;
                 break;
             }

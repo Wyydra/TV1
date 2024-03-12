@@ -15,8 +15,8 @@ public class HumanPlayer: Player
         bool moved = false;
         while (!moved)
         {
-            int r = 1 + col * (Game.CellWidth + 1);
-            int c = 0 + row * (Game.CellHeight / 2);
+            int r = 1 + col * (Grid.CellWidth + 1);
+            int c = 0 + row * (Grid.CellHeight / 2);
             Console.SetCursorPosition(r, c);
             switch (Console.ReadKey(true).Key)
             {
