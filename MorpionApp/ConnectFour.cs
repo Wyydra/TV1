@@ -1,8 +1,8 @@
 namespace MorpionApp;
 
-public class TicTacToeGame: Game
+public class ConnectFour: Game
 {
-    public TicTacToeGame(Player[] players) : base(3, 3, players)
+    public ConnectFour( Player[] players) : base(7, 4, players)
     {
     }
 
@@ -11,7 +11,14 @@ public class TicTacToeGame: Game
         Position position;
         do
         {
-            position = CurrentPlayer!.ReadInput(this, "Enter a position (row, column): ");
+            position = CurrentPlayer!.ReadInput(this, "Enter a column: ");
+            // check last empty cell in column
+            for (var i = Height - 1; i >= 0; i--)
+            {
+                if (GetCell(new Position(i,position.Column)) != EmptyCell) continue;
+                position.Row = i;
+                break;
+            }
         } while (!IsValidMove(position));
         SetCell(position, CurrentPlayer.Symbol);
         Draw();

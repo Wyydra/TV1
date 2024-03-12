@@ -3,21 +3,21 @@ namespace MorpionApp;
 public abstract class Game
 {
     protected Player? CurrentPlayer;
-    private readonly int _width;
-    private readonly int _height;
+    public readonly int Width;
+    public readonly int Height;
 
     public const int CellWidth = 4;
     public const int CellHeight = 4;
 
-    private const char EmptyCell = '\0';
+    protected const char EmptyCell = '\0';
 
     private char[,] _grid;
     private Player[] _players;
 
     protected Game(int width, int height, Player[] players)
     {
-        this._width = width;
-        this._height = height;
+        this.Width = width;
+        this.Height = height;
         _grid = new char[width, height];
         for (var i = 0; i < height; i++)
         {
@@ -36,23 +36,27 @@ public abstract class Game
         IsFinished = false;
         while (!IsFinished)
         {
+            Draw();
             SwitchPlayer();
             DoTurn();
-            Draw();
         }
     }
 
     protected bool IsValidMove(Position position)
     {
         return position.Row >= 0 
-               && position.Row < _height 
+               && position.Row < Height 
                && position.Column >= 0 
-               && position.Column < _width 
+               && position.Column < Width 
                && _grid[position.Column, position.Row] == EmptyCell;
     }
     protected void SetCell(Position position, char symbol)
     {
         _grid[position.Column, position.Row] = symbol;
+    }
+    protected char GetCell(Position position)
+    {
+        return _grid[position.Column, position.Row];
     }
     protected bool CheckWin(Position position)
     {
@@ -60,9 +64,9 @@ public abstract class Game
     }
     protected bool CheckDraw()
     {
-        for (var i = 0; i < _height; i++)
+        for (var i = 0; i < Height; i++)
         {
-            for (var j = 0; j < _width; j++)
+            for (var j = 0; j < Width; j++)
             {
                 if (_grid[j, i] == EmptyCell)
                 {
@@ -74,7 +78,7 @@ public abstract class Game
     }
     private bool CheckRow(Position position)
     {
-        for (var i = 0; i < _width; i++)
+        for (var i = 0; i < Width; i++)
         {
             if (_grid[i, position.Row] != CurrentPlayer!.Symbol)
             {
@@ -85,7 +89,7 @@ public abstract class Game
     }
     private bool CheckColumn(Position position)
     {
-        for (var i = 0; i < _height; i++)
+        for (var i = 0; i < Height; i++)
         {
             if (_grid[position.Column, i] != CurrentPlayer!.Symbol)
             {
@@ -98,7 +102,7 @@ public abstract class Game
     {
         if (position.Row == position.Column)
         {
-            for (var i = 0; i < _width; i++)
+            for (var i = 0; i < Width; i++)
             {
                 if (_grid[i, i] != CurrentPlayer!.Symbol)
                 {
@@ -108,11 +112,11 @@ public abstract class Game
             return true;
         }
 
-        if (position.Row + position.Column != _width - 1) return false;
+        if (position.Row + position.Column != Width - 1) return false;
         
-        for (var i = 0; i < _width; i++)
+        for (var i = 0; i < Width; i++)
         {
-            if (_grid[i, _width - 1 - i] != CurrentPlayer!.Symbol)
+            if (_grid[i, Width - 1 - i] != CurrentPlayer!.Symbol)
             {
                 return false;
             }
@@ -122,32 +126,32 @@ public abstract class Game
     public void Draw()
     {
         Console.Clear();
-        for (var i = 0; i < _height; i++)
+        for (var i = 0; i < Height; i++)
         {
             DrawRow(i);
-            if (i < _height - 1) DrawSeparator();
+            if (i < Height - 1) DrawSeparator();
         }
     }
 
     private void DrawRow(int rowIndex)
     {
-        for (var j = 0; j < _width; j++)
+        for (var j = 0; j < Width; j++)
         {
             var symbol = _grid[j, rowIndex] != EmptyCell ? _grid[j, rowIndex].ToString() : " ";
             var padding = (CellWidth - symbol.Length) / 2;
             var paddedSymbol = new string(' ', padding) + symbol + new string(' ', CellWidth - padding - symbol.Length);
             Console.Write(paddedSymbol);
-            if (j < _width - 1) Console.Write("|");
+            if (j < Width - 1) Console.Write("|");
         }
         Console.WriteLine();
     }
 
     private void DrawSeparator()
     {
-        for (var j = 0; j < _width; j++)
+        for (var j = 0; j < Width; j++)
         {
             Console.Write(new string('-', CellHeight));
-            if (j < _width - 1) Console.Write("+");
+            if (j < Width - 1) Console.Write("+");
         }
         Console.WriteLine();
     }

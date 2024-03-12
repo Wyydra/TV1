@@ -21,7 +21,7 @@ public class HumanPlayer: Player
             switch (Console.ReadKey(true).Key)
             {
                 case ConsoleKey.RightArrow:
-                    if (col >= 2)
+                    if (col >= game.Width - 1)
                     {
                         col = 0;
                     }
@@ -33,7 +33,7 @@ public class HumanPlayer: Player
                 case ConsoleKey.LeftArrow:
                     if (col <= 0)
                     {
-                        col = 2;
+                        col = game.Width - 1;
                     }
                     else
                     {
@@ -44,7 +44,7 @@ public class HumanPlayer: Player
                 case ConsoleKey.UpArrow:
                     if (row <= 0)
                     {
-                        row = 2;
+                        row = game.Height - 1;
                     }
                     else
                     {
@@ -53,7 +53,7 @@ public class HumanPlayer: Player
                     break;
 
                 case ConsoleKey.DownArrow:
-                    if (row >= 2)
+                    if (row >= game.Height - 1)
                     {
                         row = 0;
                     }
