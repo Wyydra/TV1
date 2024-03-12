@@ -11,26 +11,29 @@ namespace MorpionApp
             while (playAgain)
             {
                 Game game = null;
+                Player opponent = new HumanPlayer('O');
                 Console.WriteLine("Choose a game: 1 for TicTacToe, 2 for ConnectFour, 3 loaf from save");
                 var gameChoice = Console.ReadKey().Key;
                 if (gameChoice == ConsoleKey.D3)
                 {
                     game = JsonSave.Load("save.json");
                 }
-                Console.WriteLine("Choose an opponent: 1 for Human, 2 for AI");
-                var opponentChoice = Console.ReadKey().Key;
-                Player opponent = new HumanPlayer('O');
-                switch (opponentChoice)
+                else
                 {
-                    case ConsoleKey.D1:
-                        opponent = new HumanPlayer('O');
-                        break;
-                    case ConsoleKey.D2:
-                        opponent = new AIPlayer('O');
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice");
-                        break;
+                    Console.WriteLine("Choose an opponent: 1 for Human, 2 for AI");
+                    var opponentChoice = Console.ReadKey().Key;
+                    switch (opponentChoice)
+                    {
+                        case ConsoleKey.D1:
+                            opponent = new HumanPlayer('O');
+                            break;
+                        case ConsoleKey.D2:
+                            opponent = new AIPlayer('O');
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice");
+                            break;
+                    }
                 }
                 var outputService = new ConsoleOutput();
                 switch (gameChoice)
